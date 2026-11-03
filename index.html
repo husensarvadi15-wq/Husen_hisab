@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#121212">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="શ્રીજી સિમેન્ટ પ્રોડક્ટ માટે હુસેન હિસાબ એકાઉન્ટિંગ એપ્લિકેશન">
+  <title>HUSEN HISAB - શ્રીજી સિમેન્ટ પ્રોડક્ટ</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top App Bar -->
+  <header class="app-header">
+    <div class="header-branding">
+      <div>
+        <span class="factory-badge">SHREEJI CEMENT PRODUCT</span>
+        <h1 class="app-title">HUSEN <span>HISAB</span></h1>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" id="btn-quick-payment-top" title="જમા રકમ ઉમેરો" aria-label="જમા રકમ">💰</button>
+      <button class="icon-btn" id="btn-install-pwa" title="એપ ઇન્સ્ટોલ કરો" aria-label="ઇન્સ્ટોલ" style="display: none;">📥</button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-content">
+
+    <!-- TAB 1: હોમ (DASHBOARD) -->
+    <section id="tab-home" class="tab-pane active">
+      <!-- Outstanding Balance Hero Card -->
+      <div class="hero-balance-card">
+        <div class="hero-balance-label">ફેક્ટરી પાસેથી બાકી રકમ (Outstanding)</div>
+        <div class="hero-balance-val" id="dash-outstanding">₹0.00</div>
+        <div class="hero-sub-text">કુલ કમાણી - મળેલ ઉપાડ</div>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div class="quick-actions">
+        <button class="btn-quick yellow-btn" id="quick-add-work">
+          <span>➕</span> નવો હિસાબ
+        </button>
+        <button class="btn-quick outline-btn" id="quick-add-payment">
+          <span>💰</span> જમા રકમ
+        </button>
+      </div>
+
+      <!-- Highlights Grid -->
+      <div class="highlight-grid">
+        <div class="stat-card">
+          <div class="stat-label">આજની કમાણી</div>
+          <div class="stat-value yellow" id="dash-today">₹0.00</div>
+          <div class="stat-sub" id="dash-today-date">આજે</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">આ મહિનાની કમાણી</div>
+          <div class="stat-value" id="dash-month">₹0.00</div>
+          <div class="stat-sub" id="dash-month-name">ચાલુ મહિનો</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">કુલ જમા કમાણી</div>
+          <div class="stat-value blue" id="dash-total-earned">₹0.00</div>
+          <div class="stat-sub">હુસેન + પિતાજી હિસ્સો</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">કુલ મળેલ રકમ</div>
+          <div class="stat-value green" id="dash-total-paid">₹0.00</div>
+          <div class="stat-sub">ફેક્ટરીમાંથી ઉપાડ</div>
+        </div>
+      </div>
+
+      <!-- Earnings Category Breakdown Card -->
+      <div class="card">
+        <div class="card-title">
+          <span><span class="card-title-icon">📊</span>કામ મુજબ કમાણીનો હિસ્સો</span>
+        </div>
+        <div class="preview-row">
+          <span>નાની લાઇન કામ (₹1000/લાઇન):</span>
+          <span class="preview-val" id="dash-line-share">₹0.00</span>
+        </div>
+        <div class="preview-row">
+          <span>નાના થાંભલા કુટુંબ હિસ્સો (₹4):</span>
+          <span class="preview-val" id="dash-small-pole-share">₹0.00</span>
+        </div>
+        <div class="preview-row">
+          <span>મોટા થાંભલા કુટુંબ હિસ્સો (₹8):</span>
+          <span class="preview-val" id="dash-big-pole-share">₹0.00</span>
+        </div>
+      </div>
+
+      <!-- Recent Entries Card -->
+      <div class="card">
+        <div class="card-title">
+          <span><span class="card-title-icon">🕒</span>તાજેતરના વ્યવહારો</span>
+          <button class="small-btn" id="dash-view-all-btn">બધા જુઓ →</button>
+        </div>
+        <div id="dash-recent-list">
+          <div class="empty-state">
+            <div class="empty-state-icon">📝</div>
+            <p>હજી સુધી કોઈ હિસાબ નોંધાયો નથી.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: નવો હિસાબ (NEW WORK ENTRY & PAYMENT) -->
+    <section id="tab-new" class="tab-pane">
+      <div class="filter-tabs">
+        <button class="filter-btn active" id="btn-mode-work">🔨 દૈનિક કામ હિસાબ</button>
+        <button class="filter-btn" id="btn-mode-payment">💵 ફેક્ટરી જમા રકમ</button>
+      </div>
+
+      <!-- Daily Work Form -->
+      <div id="form-work-container">
+        <form id="work-form" class="card">
+          <div class="card-title">
+            <span><span class="card-title-icon">📝</span>રોજિંદા કામની એન્ટ્રી</span>
+            <span class="factory-badge">નવો રેકોર્ડ</span>
+          </div>
+
+          <!-- Date -->
+          <div class="form-group">
+            <label class="form-label" for="work-date">તારીખ પસંદ કરો</label>
+            <input type="date" id="work-date" class="form-input" required>
+          </div>
+
+          <!-- 1. Small Line Work -->
+          <div class="form-group">
+            <label class="form-label" for="small-lines">
+              1. નાની લાઇન સંખ્યા <span style="color: var(--primary-yellow);">(₹1,000 / લાઇન - 100% હુસેન)</span>
+            </label>
+            <input type="number" id="small-lines" class="form-input" placeholder="દા.ત. 1, 2..." min="0" step="1" value="0">
+          </div>
+
+          <!-- 2. Small Poles -->
+          <div class="form-group">
+            <label class="form-label" for="small-poles">
+              2. નાના થાંભલા ભરાવ્યા <span style="color: var(--primary-yellow);">(₹4 / થાંભલો)</span>
+            </label>
+            <input type="number" id="small-poles" class="form-input" placeholder="થાંભલાની સંખ્યા (દા.ત. 100)" min="0" step="1" value="0">
+            
+            <div class="worker-selection-section">
+              <div class="worker-selection-header">
+                <span>નાના થાંભલાના મજૂરો પસંદ કરો:</span>
+                <span id="small-pole-worker-count" style="color: var(--primary-yellow);">0 પસંદ</span>
+              </div>
+              <div class="worker-grid" id="small-pole-workers-group">
+                <label class="worker-chip">
+                  <input type="checkbox" name="sp_worker" value="Husen" checked> હુસેન
+                </label>
+                <label class="worker-chip family-tag selected">
+                  <input type="checkbox" name="sp_worker" value="Jumabhai" checked> જુમાભાઈ
+                </label>
+                <label class="worker-chip">
+                  <input type="checkbox" name="sp_worker" value="Sultan"> સુલતાન
+                </label>
+                <label class="worker-chip">
+                  <input type="checkbox" name="sp_worker" value="Salimbhai"> સલીમભાઈ
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Big Poles -->
+          <div class="form-group">
+            <label class="form-label" for="big-poles">
+              3. મોટા થાંભલા ભરાવ્યા <span style="color: var(--primary-yellow);">(₹8 / થાંભલો)</span>
+            </label>
+            <input type="number" id="big-poles" class="form-input" placeholder="થાંભલાની સંખ્યા (દા.ત. 100)" min="0" step="1" value="0">
+            
+            <div class="worker-selection-section">
+              <div class="worker-selection-header">
+                <span>મોટા થાંભલાના મજૂરો પસંદ કરો:</span>
+                <span id="big-pole-worker-count" style="color: var(--primary-yellow);">0 પસંદ</span>
+              </div>
+              <div class="worker-grid" id="big-pole-workers-group">
+                <label class="worker-chip">
+                  <input type="checkbox" name="bp_worker" value="Husen" checked> હુસેન
+                </label>
+                <label class="worker-chip family-tag selected">
+                  <input type="checkbox" name="bp_worker" value="Jumabhai" checked> જુમાભાઈ
+                </label>
+                <label class="worker-chip">
+                  <input type="checkbox" name="bp_worker" value="Sultan"> સુલતાન
+                </label>
+                <label class="worker-chip">
+                  <input type="checkbox" name="bp_worker" value="Salimbhai"> સલીમભાઈ
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Calculation Preview Card -->
+          <div class="preview-card">
+            <div class="preview-header">
+              <div class="preview-title">⚡ લાઈવ હિસાબ ગણતરી (પૂર્વાવલોકન)</div>
+              <span class="factory-badge">પારદર્શક</span>
+            </div>
+            <div class="preview-row">
+              <span>નાની લાઇન આવક:</span>
+              <span class="preview-val" id="prev-line-amt">₹0.00</span>
+            </div>
+            
+            <div class="preview-row">
+              <span>નાના થાંભલા કુલ મજૂરી:</span>
+              <span class="preview-val" id="prev-sp-total">₹0.00</span>
+            </div>
+            <div class="preview-row sub-row">
+              <span>↳ પ્રતિ મજૂર હિસ્સો:</span>
+              <span id="prev-sp-per-worker">₹0.00</span>
+            </div>
+            <div class="preview-row sub-row">
+              <span>↳ હુસેન + જુમાભાઈ હિસ્સો:</span>
+              <span style="color: var(--primary-yellow);" id="prev-sp-family-share">₹0.00</span>
+            </div>
+
+            <div class="preview-row">
+              <span>મોટા થાંભલા કુલ મજૂરી:</span>
+              <span class="preview-val" id="prev-bp-total">₹0.00</span>
+            </div>
+            <div class="preview-row sub-row">
+              <span>↳ પ્રતિ મજૂર હિસ્સો:</span>
+              <span id="prev-bp-per-worker">₹0.00</span>
+            </div>
+            <div class="preview-row sub-row">
+              <span>↳ હુસેન + જુમાભાઈ હિસ્સો:</span>
+              <span style="color: var(--primary-yellow);" id="prev-bp-family-share">₹0.00</span>
+            </div>
+
+            <div class="preview-total-row">
+              <div class="preview-total-label">હુસેન અને પિતાની કુલ કમાણી:</div>
+              <div class="preview-total-val" id="prev-grand-total">₹0.00</div>
+            </div>
+          </div>
+
+          <!-- Notes -->
+          <div class="form-group">
+            <label class="form-label" for="work-notes">નોંધ / વિગત (મરજિયાત)</label>
+            <input type="text" id="work-notes" class="form-input" placeholder="કોઈ ખાસ નોંધ હોય તો લખો...">
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn-primary" id="btn-save-work">
+            <span>💾</span> હિસાબ સેવ કરો
+          </button>
+        </form>
+      </div>
+
+      <!-- Payment Received Form -->
+      <div id="form-payment-container" style="display: none;">
+        <form id="payment-form" class="card">
+          <div class="card-title">
+            <span><span class="card-title-icon">💵</span>ફેક્ટરી તરફથી મળેલ રકમ (ઉપાડ)</span>
+            <span class="factory-badge" style="color: var(--accent-green); border-color: rgba(16,185,129,0.3); background: var(--green-badge);">જમા એન્ટ્રી</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="payment-date">તારીખ પસંદ કરો</label>
+            <input type="date" id="payment-date" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="payment-amount">મળેલ રકમ (રૂપિયા ₹)</label>
+            <input type="number" id="payment-amount" class="form-input" placeholder="દા.ત. 5000" min="1" step="any" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="payment-notes">વિગત / ચૂકવણીનો પ્રકાર (મરજિયાત)</label>
+            <input type="text" id="payment-notes" class="form-input" placeholder="દા.ત. રોકડા, બેંક ટ્રાન્સફર, ચેક...">
+          </div>
+
+          <button type="submit" class="btn-primary" id="btn-save-payment">
+            <span>💾</span> જમા રકમ સેવ કરો
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- TAB 3: હિસ્ટ્રી (HISTORY) -->
+    <section id="tab-history" class="tab-pane">
+      <div class="card" style="padding: 12px 14px; margin-bottom: 12px;">
+        <div style="display: flex; gap: 8px;">
+          <input type="text" id="history-search" class="form-input" placeholder="🔍 તારીખ અથવા નોંધથી શોધો..." style="min-height: 44px; font-size: 14px;">
+          <input type="month" id="history-month-filter" class="form-input" style="min-height: 44px; width: 150px; font-size: 13px;">
+        </div>
+      </div>
+
+      <div class="filter-tabs">
+        <button class="filter-btn active" data-filter="all">બધા વ્યવહારો (<span id="count-all">0</span>)</button>
+        <button class="filter-btn" data-filter="work">કામ હિસાબ (<span id="count-work">0</span>)</button>
+        <button class="filter-btn" data-filter="payment">જમા રકમ (<span id="count-payment">0</span>)</button>
+      </div>
+
+      <!-- History List Container -->
+      <div id="history-list-container">
+        <!-- Rendered via JS -->
+      </div>
+    </section>
+
+    <!-- TAB 4: રિપોર્ટ (MONTHLY REPORT) -->
+    <section id="tab-report" class="tab-pane">
+      <div class="report-header-selector">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label" for="report-month-picker">મહિનો અને વર્ષ પસંદ કરો</label>
+          <input type="month" id="report-month-picker" class="form-input">
+        </div>
+        <div style="display: flex; align-items: flex-end;">
+          <button class="btn-secondary" id="btn-print-report" style="height: 48px;">
+            <span>🖨️</span> પ્રિન્ટ / PDF
+          </button>
+        </div>
+      </div>
+
+      <!-- Monthly Summary Box -->
+      <div class="report-summary-box" id="printable-report">
+        <div style="text-align: center; margin-bottom: 14px; border-bottom: 1px dashed var(--border-color); padding-bottom: 10px;">
+          <span class="factory-badge">SHREEJI CEMENT PRODUCT</span>
+          <h2 style="font-size: 19px; font-weight: 800; color: var(--primary-yellow); margin-top: 4px;">માસિક હિસાબ રિપોર્ટ</h2>
+          <div style="font-size: 14px; color: var(--text-secondary);" id="rep-period-title">મહિનો: --</div>
+        </div>
+
+        <div class="report-stat-row">
+          <span>કુલ નાની લાઇન:</span>
+          <span class="preview-val" id="rep-total-lines">0</span>
+        </div>
+        <div class="report-stat-row">
+          <span>નાની લાઇન મજૂરી આવક:</span>
+          <span class="preview-val" id="rep-line-earnings">₹0.00</span>
+        </div>
+        <div class="report-stat-row">
+          <span>કુલ નાના થાંભલા:</span>
+          <span class="preview-val" id="rep-total-sp">0</span>
+        </div>
+        <div class="report-stat-row">
+          <span>નાના થાંભલા કુટુંબ હિસ્સો:</span>
+          <span class="preview-val" id="rep-sp-family-share">₹0.00</span>
+        </div>
+        <div class="report-stat-row">
+          <span>કુલ મોટા થાંભલા:</span>
+          <span class="preview-val" id="rep-total-bp">0</span>
+        </div>
+        <div class="report-stat-row">
+          <span>મોટા થાંભલા કુટુંબ હિસ્સો:</span>
+          <span class="preview-val" id="rep-bp-family-share">₹0.00</span>
+        </div>
+        <div class="report-stat-row" style="border-top: 1px solid var(--border-color); padding-top: 10px; margin-top: 6px;">
+          <span style="font-weight: 700; color: var(--primary-yellow);">આ મહિનાની કુલ કમાણી:</span>
+          <span class="preview-val" style="font-size: 18px; color: var(--primary-yellow);" id="rep-month-total-earned">₹0.00</span>
+        </div>
+        <div class="report-stat-row">
+          <span style="font-weight: 700; color: var(--accent-green);">આ મહિનામાં મળેલ ઉપાડ:</span>
+          <span class="preview-val" style="font-size: 18px; color: var(--accent-green);" id="rep-month-total-paid">₹0.00</span>
+        </div>
+        <div class="report-stat-row" style="background: rgba(255,215,0,0.06); padding: 10px 8px; border-radius: var(--radius-sm); margin-top: 8px;">
+          <span style="font-weight: 800;">આ મહિનાનું બાકી બેલેન્સ:</span>
+          <span class="preview-val" style="font-size: 20px; font-weight: 900; color: var(--primary-yellow);" id="rep-month-net-balance">₹0.00</span>
+        </div>
+      </div>
+
+      <!-- Daily Breakdown for the Month -->
+      <div class="card">
+        <div class="card-title">
+          <span><span class="card-title-icon">📋</span>મહિનાની દૈનિક વિગત (Daily Breakdown)</span>
+        </div>
+        <div id="report-daily-breakdown">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: સેટિંગ્સ અને બેકઅપ (SETTINGS & BACKUP) -->
+    <section id="tab-settings" class="tab-pane">
+      <!-- Rules & Factory Info -->
+      <div class="card">
+        <div class="card-title">
+          <span><span class="card-title-icon">ℹ️</span>કામ અને મજૂરીના નિયમો</span>
+        </div>
+        <div style="font-size: 13.5px; color: var(--text-secondary); line-height: 1.7;">
+          <p>• <strong>ફેક્ટરી:</strong> શ્રીજી સિમેન્ટ પ્રોડક્ટ (SHREEJI CEMENT PRODUCT)</p>
+          <p>• <strong>નાની લાઇન:</strong> ૧ લાઇનના ₹૧,૦૦૦ (૧૦૦% હુસેનને મળે છે)</p>
+          <p>• <strong>નાના થાંભલા:</strong> ₹૪ પ્રતિ થાંભલો (પસંદ કરેલ મજૂરો વચ્ચે સરખે ભાગે)</p>
+          <p>• <strong>મોટા થાંભલા:</strong> ₹૮ પ્રતિ થાંભલો (પસંદ કરેલ મજૂરો વચ્ચે સરખે ભાગે)</p>
+          <p>• <strong>કુટુંબ હિસ્સો:</strong> જુમાભાઈ હુસેનના પિતા છે, માટે જુમાભાઈનો હિસ્સો હુસેનની કમાણીમાં ઉમેરાય છે. સુલતાન અને સલીમભાઈનો હિસ્સો ઉમેરાતો નથી.</p>
+        </div>
+      </div>
+
+      <!-- Backup & Restore -->
+      <div class="card">
+        <div class="card-title">
+          <span><span class="card-title-icon">💾</span>બેકઅપ અને સુરક્ષા (Backup & Safety)</span>
+        </div>
+        <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;">
+          બધો હિસાબ આપના ફોનની અંદર IndexedDB માં કાયમી સુરક્ષિત રહે છે. કોઈ પણ સર્વર પર ડેટા જતો નથી.
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <button class="btn-primary" id="btn-export-json">
+            <span>📥</span> સંપૂર્ણ બેકઅપ ફાઇલ ડાઉનલોડ કરો (JSON)
+          </button>
+          
+          <button class="btn-secondary" id="btn-trigger-import">
+            <span>📤</span> બેકઅપ ફાઇલ રિસ્ટોર કરો (Import JSON)
+          </button>
+          <input type="file" id="import-file-input" accept=".json" style="display: none;">
+
+          <button class="btn-secondary" id="btn-export-csv">
+            <span>📊</span> એક્સેલ શીટ ડાઉનલોડ કરો (Export CSV)
+          </button>
+
+          <button class="btn-secondary" id="btn-download-zip">
+            <span>📦</span> એપ્લિકેશન સંપૂર્ણ ફાઇલો ડાઉનલોડ કરો (ZIP)
+          </button>
+        </div>
+      </div>
+
+      <!-- Danger Zone -->
+      <div class="card" style="border-color: rgba(239, 68, 68, 0.4);">
+        <div class="card-title" style="color: #F87171;">
+          <span><span>⚠️</span>જોખમી વિસ્તાર (Danger Zone)</span>
+        </div>
+        <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
+          જો તમે નવેસરથી હિસાબ શરૂ કરવા માંગતા હોવ તો તમામ ડેટા સાફ કરી શકો છો. સાફ કરતા પહેલાં બેકઅપ ડાઉનલોડ કરી લેવો.
+        </p>
+        <button class="btn-secondary btn-danger" id="btn-clear-all-data">
+          <span>🗑️</span> તમામ હિસાબ ડેટા ડિલીટ કરો
+        </button>
+      </div>
+
+      <!-- Instructions Guide -->
+      <div class="card">
+        <div class="card-title">
+          <span><span class="card-title-icon">📱</span>એન્ડ્રોઇડ ફોનમાં ઇન્સ્ટોલ કરવાની રીત</span>
+        </div>
+        <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.8;">
+          <p>૧. એન્ડ્રોઇડ મોબાઇલના Google Chrome બ્રાઉઝરમાં આ એપ્લિકેશન ખોલો.</p>
+          <p>૨. ઉપર જમણી બાજુ આવેલ <strong>ત્રણ ટપકાં (⋮)</strong> પર ક્લિક કરો.</p>
+          <p>૩. <strong>"Add to Home screen" (હોમ સ્ક્રીન પર ઉમેરો)</strong> અથવા <strong>"Install app"</strong> વિકલ્પ પસંદ કરો.</p>
+          <p>૪. એપ્લિકેશન તમારા ફોનની સ્ક્રીન પર એક અસલી ઍપની જેમ સેવ થઈ જશે અને ઇન્ટરનેટ વગર પણ કામ કરશે.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Edit Work Record Modal -->
+  <div class="modal-overlay" id="modal-edit-work">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title">✏️ કામ હિસાબ સુધારો (Edit Entry)</h3>
+        <button class="icon-btn" id="modal-edit-work-close">✕</button>
+      </div>
+      <form id="edit-work-form">
+        <input type="hidden" id="edit-work-id">
+        
+        <div class="form-group">
+          <label class="form-label" for="edit-work-date">તારીખ</label>
+          <input type="date" id="edit-work-date" class="form-input" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="edit-small-lines">નાની લાઇન સંખ્યા (₹1000)</label>
+          <input type="number" id="edit-small-lines" class="form-input" min="0" step="1">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="edit-small-poles">નાના થાંભલા (₹4)</label>
+          <input type="number" id="edit-small-poles" class="form-input" min="0" step="1">
+          <div class="worker-selection-section">
+            <div class="worker-selection-header">નાના થાંભલાના મજૂરો:</div>
+            <div class="worker-grid" id="edit-sp-workers-group">
+              <label class="worker-chip"><input type="checkbox" name="edit_sp_worker" value="Husen"> હુસેન</label>
+              <label class="worker-chip family-tag"><input type="checkbox" name="edit_sp_worker" value="Jumabhai"> જુમાભાઈ</label>
+              <label class="worker-chip"><input type="checkbox" name="edit_sp_worker" value="Sultan"> સુલતાન</label>
+              <label class="worker-chip"><input type="checkbox" name="edit_sp_worker" value="Salimbhai"> સલીમભાઈ</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="edit-big-poles">મોટા થાંભલા (₹8)</label>
+          <input type="number" id="edit-big-poles" class="form-input" min="0" step="1">
+          <div class="worker-selection-section">
+            <div class="worker-selection-header">મોટા થાંભલાના મજૂરો:</div>
+            <div class="worker-grid" id="edit-bp-workers-group">
+              <label class="worker-chip"><input type="checkbox" name="edit_bp_worker" value="Husen"> હુસેન</label>
+              <label class="worker-chip family-tag"><input type="checkbox" name="edit_bp_worker" value="Jumabhai"> જુમાભાઈ</label>
+              <label class="worker-chip"><input type="checkbox" name="edit_bp_worker" value="Sultan"> સુલતાન</label>
+              <label class="worker-chip"><input type="checkbox" name="edit_bp_worker" value="Salimbhai"> સલીમભાઈ</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="preview-card" style="margin-top: 10px;">
+          <div class="preview-total-row" style="border-top: none; padding-top: 0;">
+            <div class="preview-total-label">નવી ગણતરી કુલ હિસ્સો:</div>
+            <div class="preview-total-val" id="edit-prev-grand-total">₹0.00</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="edit-work-notes">નોંધ</label>
+          <input type="text" id="edit-work-notes" class="form-input">
+        </div>
+
+        <button type="submit" class="btn-primary" id="btn-update-work">
+          <span>💾</span> સુધારો સેવ કરો
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Payment Modal -->
+  <div class="modal-overlay" id="modal-edit-payment">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title">✏️ જમા રકમ સુધારો</h3>
+        <button class="icon-btn" id="modal-edit-payment-close">✕</button>
+      </div>
+      <form id="edit-payment-form">
+        <input type="hidden" id="edit-payment-id">
+        <div class="form-group">
+          <label class="form-label" for="edit-payment-date">તારીખ</label>
+          <input type="date" id="edit-payment-date" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="edit-payment-amount">મળેલ રકમ (₹)</label>
+          <input type="number" id="edit-payment-amount" class="form-input" min="1" step="any" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="edit-payment-notes">નોંધ</label>
+          <input type="text" id="edit-payment-notes" class="form-input">
+        </div>
+        <button type="submit" class="btn-primary">
+          <span>💾</span> સુધારો સેવ કરો
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div class="modal-overlay" id="modal-confirm">
+    <div class="modal-sheet" style="text-align: center;">
+      <div style="font-size: 40px; margin-bottom: 12px;" id="confirm-icon">⚠️</div>
+      <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 8px;" id="confirm-title">શું આપ ખાતરીપૂર્વક આગળ વધવા માંગો છો?</h3>
+      <p style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px;" id="confirm-message">આ ક્રિયા પૂર્વવત થઈ શકશે નહીં.</p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+        <button class="btn-secondary" id="btn-confirm-cancel">ના, રદ કરો</button>
+        <button class="btn-primary btn-danger" id="btn-confirm-ok">હા, મંજૂર કરો</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation Bar (5 Tabs) -->
+  <nav class="bottom-nav">
+    <button class="nav-tab active" data-tab="tab-home">
+      <span class="nav-tab-icon">🏠</span>
+      <span>હોમ</span>
+    </button>
+    <button class="nav-tab" data-tab="tab-new">
+      <span class="nav-tab-icon">➕</span>
+      <span>નવો હિસાબ</span>
+    </button>
+    <button class="nav-tab" data-tab="tab-history">
+      <span class="nav-tab-icon">📜</span>
+      <span>હિસ્ટ્રી</span>
+    </button>
+    <button class="nav-tab" data-tab="tab-report">
+      <span class="nav-tab-icon">📊</span>
+      <span>રિપોર્ટ</span>
+    </button>
+    <button class="nav-tab" data-tab="tab-settings">
+      <span class="nav-tab-icon">⚙️</span>
+      <span>સેટિંગ્સ</span>
+    </button>
+  </nav>
+
+  <!-- Toast Message -->
+  <div class="toast" id="toast-message">
+    <span id="toast-icon">✓</span>
+    <span id="toast-text">હિસાબ સફળતાપૂર્વક સેવ થયો!</span>
+  </div>
+
+  <!-- Scripts -->
+  <script src="db.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

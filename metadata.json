@@ -1,0 +1,6 @@
+{
+  "name": "Husen Hisab",
+  "description": "શ્રીજી સિમેન્ટ પ્રોડક્ટ માટે હુસેન હિસાબ એકાઉન્ટિંગ એપ્લિકેશન",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
