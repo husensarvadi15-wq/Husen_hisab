@@ -1,8 +1,9 @@
-name: Build Android APK
+name: Build Husen Hisab APK
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -10,24 +11,43 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'temurin'
-        java-version: '17'
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
 
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@v3
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.3.1'
 
-    - name: Build Debug APK
-      run: gradle assembleDebug
+      - name: Configure Firebase
+        env:
+          FIREBASE_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -z "$FIREBASE_JSON" ]; then
+            echo "ERROR: GOOGLE_SERVICES_JSON secret is missing"
+            exit 1
+          fi
 
-    - name: Upload APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: husen-hisab-debug-apk
-        path: app/build/outputs/apk/debug/*.apk
-        
+          mkdir -p app
+          printf '%s' "$FIREBASE_JSON" > app/google-services.json
+
+          python3 -m json.tool app/google-services.json > /dev/null
+
+          echo "Firebase JSON configured successfully"
+
+      - name: Build Debug APK
+        run: gradle assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Husen-Hisab-APK
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          
